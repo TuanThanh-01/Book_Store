@@ -1,6 +1,5 @@
 package com.PTIT.BookStore.entities;
 
-import com.PTIT.BookStore.entities.Book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "tbl_cartItem")
+@Table(name = "tbl_orderItem")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
+public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +21,7 @@ public class CartItem {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    public CartItem(Book book) {
-        this.book = book;
-    }
+    private int quantity;
+
+    private String status;
 }

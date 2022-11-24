@@ -3,18 +3,16 @@ package com.PTIT.BookStore.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Table(name = "tbl_invoice")
+@Table(name = "tbl_order")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Invoice {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +22,13 @@ public class Invoice {
     private String phoneNumber;
     private String fullNameUserOrder;
 
-    @DateTimeFormat(pattern = "HH:mm dd-MM-yyyy")
-    private Date dateOrder;
+    private String dateOrder;
 
     @ManyToOne
     @JoinColumn(name = "user_order")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    private Set<OrderItem> listOderItem;
 }

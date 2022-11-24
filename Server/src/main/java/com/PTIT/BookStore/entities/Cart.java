@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,13 +25,9 @@ public class Cart {
 
     @OneToMany
     @JoinColumn(name = "cart_id")
-    private Set<CartItem> listCartItem;
+    private Set<CartItem> listCartItem = new HashSet<>();
 
-    public long getTotalPrice(){
-        long total = 0;
-        for(CartItem cartItem: listCartItem) {
-            total += cartItem.getQuantity() * cartItem.getBook().getPrice();
-        }
-        return total;
+    public Cart(User user) {
+        this.user = user;
     }
 }
