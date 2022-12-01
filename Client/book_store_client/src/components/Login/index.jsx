@@ -5,10 +5,13 @@ import {
   AiFillLinkedin,
 } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
+import { SpinnerLoading } from '../SpinnerLoading/index';
 import axios from 'axios';
+import { useState } from 'react';
 
 const Login = ({ setUser }) => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -27,11 +30,17 @@ const Login = ({ setUser }) => {
       reset();
       navigate('/');
     } catch (error) {
+      setIsLoading(false);
       alert('wrong email or password');
     }
   };
 
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+
   const onSubmit = (values) => {
+    setIsLoading(true);
     sendDataLogin(values);
   };
 

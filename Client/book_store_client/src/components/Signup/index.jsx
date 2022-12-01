@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { SpinnerLoading } from '../SpinnerLoading/index';
 import axios from 'axios';
+import { useState } from 'react';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -22,13 +25,19 @@ const Signup = () => {
       reset();
       navigate('/login');
     } catch (error) {
+      setIsLoading(false);
       alert(error.response.data.message);
     }
   };
 
   const onSubmit = (values) => {
+    setIsLoading(true);
     sendDataSignup(values);
   };
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
 
   return (
     <section className='vh-100' style={{ backgroundColor: '#eee' }}>
