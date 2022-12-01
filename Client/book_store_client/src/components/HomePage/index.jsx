@@ -19,7 +19,6 @@ const HomePage = () => {
       const response = await axios.get(url);
       setListBook(response.data);
       books = response.data;
-      console.log(books);
       setIsLoading(false);
     } catch (error) {
       alert('please reload again');

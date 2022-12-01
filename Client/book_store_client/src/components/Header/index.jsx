@@ -1,8 +1,30 @@
 import { Link } from 'react-router-dom';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { SpinnerLoading } from '../SpinnerLoading/index';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-const Header = ({ user, setUser }) => {
-  if (!user) {
+const Header = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoading(true);
+    localStorage.clear('role');
+    localStorage.clear('token');
+    localStorage.clear('userName');
+    localStorage.clear('userEmail');
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate('/');
+    }, 2000);
+  };
+
+  if (isLoading) {
+    return <SpinnerLoading />;
+  }
+
+  if (!localStorage.getItem('token')) {
     return (
       <header>
         <nav
@@ -75,18 +97,18 @@ const Header = ({ user, setUser }) => {
               </Link>
             </li>
             <li className='nav-item'>
-              {user.roles[0] === 'ROLE_ADMIN' ? (
-                <Link className='nav-link' to='admin'>
-                  Admin
+              {localStorage.getItem('role') === 'ROLE_ADMIN' ? (
+                <Link className='nav-link' to='manageBook'>
+                  Manage Book
                 </Link>
               ) : (
-                <Link className='nav-link' to='shelf'>
-                  Shelf
+                <Link className='nav-link' to='historyOrder'>
+                  History Order
                 </Link>
               )}
             </li>
             <li className='nav-item'>
-              <Link className='nav-link' to='/' onClick={() => setUser(null)}>
+              <Link className='nav-link' to='/' onClick={handleLogout}>
                 Log out
               </Link>
             </li>

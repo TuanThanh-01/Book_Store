@@ -9,7 +9,7 @@ import { SpinnerLoading } from '../SpinnerLoading/index';
 import axios from 'axios';
 import { useState } from 'react';
 
-const Login = ({ setUser }) => {
+const Login = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +26,14 @@ const Login = ({ setUser }) => {
         'http://localhost:8082/api/v1/auth/login',
         data
       );
-      setUser(response.data);
+
+      localStorage.setItem('userEmail', response.data.email);
+      localStorage.setItem('role', response.data.roles[0]);
+      localStorage.setItem(
+        'userName',
+        `${response.data.firstName} ${response.data.lastName}`
+      );
+      localStorage.setItem('token', response.data.token);
       reset();
       navigate('/');
     } catch (error) {

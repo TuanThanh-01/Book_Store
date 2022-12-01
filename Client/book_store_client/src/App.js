@@ -5,22 +5,18 @@ import SharedLayOut from './components/SharedLayout';
 import Signup from './components/Signup/index';
 import HomePage from './components/HomePage/index';
 import Admin from './components/Admin/index';
-import { useState } from 'react';
+import NewBook from './components/Admin/components/NewBook/index';
 
 function App() {
-  const [user, setUser] = useState(null);
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path='/'
-          element={<SharedLayOut user={user} setUser={setUser} />}
-        >
+        <Route path='/' element={<SharedLayOut />}>
           <Route index element={<HomePage />} />
-          <Route path='/login' element={<Login setUser={setUser} />} />
+          <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route path='/admin' element={<Admin />} />
+          <Route path='/manageBook' element={<Admin />} />
+          <Route path='/newBook' element={<NewBook />} />
         </Route>
         <Route path='*' element={<Forbidden />} />
       </Routes>

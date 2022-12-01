@@ -2,10 +2,10 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header/index';
 import Footer from './Footer/index';
 
-const SharedLayOut = ({ user, setUser }) => {
+const SharedLayOut = () => {
   return (
     <>
-      <Header user={user} setUser={setUser} />
+      <Header />
       <Outlet />
       <Footer />
     </>
