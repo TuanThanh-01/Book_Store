@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Book = ({ book }) => {
   const handleDeleteBook = (e) => {
@@ -6,6 +7,22 @@ const Book = ({ book }) => {
       'Are you sure you want to delte this book?'
     );
     if (confirmDelte) {
+      axios
+        .delete(
+          `http://localhost:8082/api/v1/admin/book/delete/${e.target.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        )
+        .then((res) => {
+          alert('Delete book successfully!!!');
+          window.location.reload();
+        })
+        .catch((err) => {
+          alert("Can't delete this book");
+        });
     }
   };
 

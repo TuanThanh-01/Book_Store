@@ -114,14 +114,20 @@ const Header = () => {
             </li>
           </ul>
 
-          <Link
-            className='btn btn-md ml-3'
-            style={{ backgroundColor: '#CFFDE1', color: '#434242' }}
-            to='/cart'
-          >
-            <AiOutlineShoppingCart className='pt-1' /> Cart
-            <span className='ml-2 badge badge-light'>0</span>
-          </Link>
+          {localStorage.getItem('role') === 'ROLE_ADMIN' ? (
+            <p className='pt-1' style={{ color: '#810CA8' }}>
+              Hello, Administrator
+            </p>
+          ) : (
+            <Link
+              className='btn btn-md ml-3'
+              style={{ backgroundColor: '#CFFDE1', color: '#434242' }}
+              to='/cart'
+            >
+              <AiOutlineShoppingCart className='pt-1' /> Cart
+              <span className='ml-2 badge badge-light'>0</span>
+            </Link>
+          )}
         </div>
       </nav>
     </header>
