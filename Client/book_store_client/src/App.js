@@ -6,6 +6,7 @@ import Signup from './components/Signup/index';
 import HomePage from './components/HomePage/index';
 import Admin from './components/Admin/index';
 import NewBook from './components/Admin/components/NewBook/index';
+import UpdateBook from './components/Admin/components/UpdateBook/index';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/signup' element={<Signup />} />
           <Route path='/manageBook' element={<Admin />} />
           <Route path='/newBook' element={<NewBook />} />
+          <Route path='/updateBook/:bookId' element={<UpdateBook />} />
         </Route>
         <Route path='*' element={<Forbidden />} />
       </Routes>

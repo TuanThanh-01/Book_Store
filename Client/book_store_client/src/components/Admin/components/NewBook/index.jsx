@@ -254,12 +254,10 @@ const NewBook = () => {
                 <div className='text-center text-lg-start mt-4 pt-2'>
                   <button
                     type='submit'
-                    className='btn btn-lg'
+                    className='btn btn-outline-info'
                     style={{
                       paddingLeft: '2.5rem',
                       paddingRight: '2.5rem',
-                      backgroundColor: '#3c4048',
-                      color: 'white',
                     }}
                     onClick={handleSubmit(submitForm)}
                   >
