@@ -9,9 +9,9 @@ const Rating = ({ rating }) => {
       <div>
         {[...Array(5).keys()].map((current) =>
           current <= star - 1 ? (
-            <span className='fa fa-star checked'></span>
+            <span className='fa fa-star checked ml-1'></span>
           ) : (
-            <span className='fa fa-star'></span>
+            <span className='fa fa-star ml-1'></span>
           )
         )}
       </div>
