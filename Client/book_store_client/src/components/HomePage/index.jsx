@@ -34,7 +34,6 @@ const HomePage = () => {
       setListBook(books);
     }
     setKeyWord('');
-    console.log(keyWord);
   };
 
   useEffect(() => {
@@ -65,7 +64,10 @@ const HomePage = () => {
               className='col-4 mr-2 rounded'
               placeholder='Enter title'
               value={keyWord}
-              onChange={(e) => setKeyWord(e.target.value)}
+              onChange={(e) => {
+                setKeyWord(e.target.value);
+                setListBook(books);
+              }}
             ></input>
             <button
               className='btn btn-outline-success my-2 my-sm-0 btn-sm'

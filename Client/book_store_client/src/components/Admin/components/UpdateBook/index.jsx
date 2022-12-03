@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { SpinnerLoading } from '../../../SpinnerLoading';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 const UpdateBook = () => {
-  const navigate = useNavigate();
   const { bookId } = useParams();
   const [book, setBook] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -22,15 +21,9 @@ const UpdateBook = () => {
   const getBookData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8082/api/v1/book/${bookId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
+        `http://localhost:8082/api/v1/book/${bookId}`
       );
       setBook(response.data);
-      console.log(book);
     } catch (error) {
       console.log(error);
     }
@@ -70,16 +63,21 @@ const UpdateBook = () => {
     setIsLoading(true);
 
     axios
-      .post('http://localhost:8082/api/v1/admin/book/save', formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .put(
+        `http://localhost:8082/api/v1/admin/book/update/${bookId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
       .then((res) => {
-        alert('Save book successfully!!!');
+        alert('Update book successfully!!!');
+        setIsLoading(false);
         reset();
-        navigate('/manageBook');
+        window.location.reload();
       })
       .catch((err) => {
         setIsLoading(false);
@@ -121,63 +119,54 @@ const UpdateBook = () => {
             {disabled ? (
               <div
                 id='carouselExampleControls'
-                class='carousel slide'
+                className='carousel slide container'
                 data-ride='carousel'
               >
-                <div class='carousel-inner'>
-                  {/* {book.bookImages.forEach((image) => console.log(image.name))} */}
+                <h3 className='text-center mb-3'>Book Images</h3>
+                <div className='carousel-inner'>
                   {book.bookImages.map((image, index) =>
                     index === 1 ? (
-                      <div class='carousel-item active'>
+                      <div className='carousel-item active'>
                         <img
-                          class='d-block w-100'
+                          className='d-block w-100'
                           src={`http://localhost:8082/images/${image.name}`}
                           alt='First slide'
                         />
                       </div>
                     ) : (
-                      <div class='carousel-item'>
+                      <div className='carousel-item'>
                         <img
-                          class='d-block w-100'
+                          className='d-block w-100'
                           src={`http://localhost:8082/images/${image.name}`}
                           alt='First slide'
                         />
                       </div>
                     )
                   )}
-                  {/* <div class='carousel-item active'>
-                    <img class='d-block w-100' src='...' alt='First slide' />
-                  </div>
-                  <div class='carousel-item'>
-                    <img class='d-block w-100' src='...' alt='Second slide' />
-                  </div>
-                  <div class='carousel-item'>
-                    <img class='d-block w-100' src='...' alt='Third slide' />
-                  </div> */}
                 </div>
                 <a
-                  class='carousel-control-prev'
+                  className='carousel-control-prev'
                   href='#carouselExampleControls'
                   role='button'
                   data-slide='prev'
                 >
                   <span
-                    class='carousel-control-prev-icon'
+                    className='carousel-control-prev-icon'
                     aria-hidden='true'
                   ></span>
-                  <span class='sr-only'>Previous</span>
+                  <span className='sr-only'>Previous</span>
                 </a>
                 <a
-                  class='carousel-control-next'
+                  className='carousel-control-next'
                   href='#carouselExampleControls'
                   role='button'
                   data-slide='next'
                 >
                   <span
-                    class='carousel-control-next-icon'
+                    className='carousel-control-next-icon'
                     aria-hidden='true'
                   ></span>
-                  <span class='sr-only'>Next</span>
+                  <span className='sr-only'>Next</span>
                 </a>
               </div>
             ) : (
@@ -422,6 +411,7 @@ const UpdateBook = () => {
                         paddingLeft: '2.5rem',
                         paddingRight: '2.5rem',
                       }}
+                      disabled={disabled}
                       onClick={handleSubmit(submitForm)}
                     >
                       Save Book

@@ -53,7 +53,7 @@ const Login = () => {
 
   return (
     <article>
-      <section className='vh-100 mt-2'>
+      <section className='mt-2'>
         <div className='container-fluid h-custom'>
           <div className='row d-flex justify-content-center align-items-center h-100'>
             <div className='col-md-9 col-lg-6 col-xl-5'>

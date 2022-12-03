@@ -39,7 +39,7 @@ const Book = ({ book }) => {
         </p>
       </div>
       <div className='col justify-content-center align-items-center d-flex'>
-        <Link to={`/book/${book.id}`} className='btn btn-outline-info'>
+        <Link to={`/viewBook/${book.id}`} className='btn btn-outline-info'>
           View Details
         </Link>
       </div>
