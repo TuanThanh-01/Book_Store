@@ -10,6 +10,7 @@ const Header = () => {
 
   const handleLogout = () => {
     setIsLoading(true);
+    localStorage.clear('userId');
     localStorage.clear('role');
     localStorage.clear('token');
     localStorage.clear('userName');
@@ -124,8 +125,8 @@ const Header = () => {
               style={{ backgroundColor: '#CFFDE1', color: '#434242' }}
               to='/cart'
             >
-              <AiOutlineShoppingCart className='pt-1' /> Cart
-              <span className='ml-2 badge badge-light'>0</span>
+              <AiOutlineShoppingCart />{' '}
+              <span className='font-weight-bold'>Cart</span>
             </Link>
           )}
         </div>

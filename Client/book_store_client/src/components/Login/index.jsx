@@ -27,6 +27,7 @@ const Login = () => {
         data
       );
 
+      localStorage.setItem('userId', response.data.id);
       localStorage.setItem('userEmail', response.data.email);
       localStorage.setItem('role', response.data.roles[0]);
       localStorage.setItem(

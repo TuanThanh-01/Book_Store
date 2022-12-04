@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SpinnerLoading } from '../SpinnerLoading';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,7 @@ const BookDetails = () => {
   const [ratingStar, setRatingStar] = useState(0);
   const [hover, setHover] = useState(0);
   const [ratingsPerPage] = useState(3);
+  const navigate = useNavigate();
 
   const getBookData = async () => {
     try {
@@ -69,6 +70,30 @@ const BookDetails = () => {
       })
       .catch(() => {
         alert('Cannot Review, Try again');
+      });
+  };
+
+  const handleAddToCart = () => {
+    const data = { bookId };
+    axios
+      .post(
+        `http://localhost:8082/api/v1/cart/${localStorage.getItem(
+          'userId'
+        )}/addItem`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      )
+      .then((res) => {
+        alert('Add Item To Cart Success!!!');
+        localStorage.setItem(`book ${bookId}`, 'added');
+        navigate('/cart');
+      })
+      .catch(() => {
+        alert('Cannot Add Item To Cart, Try Again');
       });
   };
 
@@ -186,9 +211,22 @@ const BookDetails = () => {
                 </div>
                 <div className='text-center'>
                   {localStorage.getItem('token') ? (
-                    <button className='btn btn-outline-info'>
-                      <AiOutlineShoppingCart /> Add To Cart
-                    </button>
+                    localStorage.getItem(`book ${bookId}`) ? (
+                      <button
+                        className='btn btn-secondary'
+                        onClick={handleAddToCart}
+                        disabled={true}
+                      >
+                        The item is already in the cart
+                      </button>
+                    ) : (
+                      <button
+                        className='btn btn-outline-info'
+                        onClick={handleAddToCart}
+                      >
+                        <AiOutlineShoppingCart /> Add To Cart
+                      </button>
+                    )
                   ) : (
                     <Link className='btn btn-outline-info' to='/login'>
                       Login
