@@ -1,13 +1,22 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { SpinnerLoading } from '../SpinnerLoading';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 const Cart = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState([]);
+  const unitCurrency = Intl.NumberFormat('en-US');
+  const [totalValueCart, setTotalValueCart] = useState(0);
+  const [ownerCartId, setOwnerCartId] = useState(0);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   const getCartData = async () => {
     try {
@@ -19,10 +28,20 @@ const Cart = () => {
           },
         }
       );
+      setOwnerCartId(response.data.user.id);
       setCart(response.data.listCartItem);
+      let tmpValue = 0;
+      response.data.listCartItem.forEach((item) => {
+        tmpValue += item.book.price;
+      });
+      setTotalValueCart(tmpValue);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const submitOrder = (values) => {
+    console.log(values);
   };
 
   useEffect(() => {
@@ -49,7 +68,7 @@ const Cart = () => {
       >
         <div className='row'>
           <div className='col-12'>
-            <div className='table-responsive'>
+            <div className='table-responsive mb-5'>
               <table className='table table-striped'>
                 <thead>
                   <tr>
@@ -63,7 +82,36 @@ const Cart = () => {
                       Price
                     </th>
                     <th scope='col' className='text-right'>
-                      <button className='btn btn-outline-danger'>
+                      <button
+                        className='btn btn-outline-danger'
+                        onClick={() => {
+                          axios
+                            .delete(
+                              `http://localhost:8082/api/v1/cart/${ownerCartId}/deleteAllItem`,
+                              {
+                                headers: {
+                                  Authorization: `Bearer ${localStorage.getItem(
+                                    'token'
+                                  )}`,
+                                },
+                              }
+                            )
+                            .then(() => {
+                              cart.forEach((item) => {
+                                localStorage.removeItem(`book ${item.book.id}`);
+                              });
+                              setCart([]);
+                              setTotalValueCart(0);
+                            })
+                            .catch(() => {
+                              alert('something went wrong');
+                            });
+
+                          cart.forEach((item) => {
+                            console.log(item.book.id);
+                          });
+                        }}
+                      >
                         Clear Cart
                       </button>
                     </th>
@@ -95,70 +143,168 @@ const Cart = () => {
                             ).value;
                             document.querySelector(
                               `#cart${index}`
-                            ).innerText = `${
+                            ).innerText = `${unitCurrency.format(
                               cartItem.book.price * quantity
-                            } VND`;
+                            )} VND`;
+                            let totalValue = 0;
+                            cart.forEach((item, index) => {
+                              totalValue +=
+                                item.book.price *
+                                +document.querySelector(`#quantityItem${index}`)
+                                  .value;
+                            });
+                            setTotalValueCart(totalValue);
                           }}
                         />
                       </td>
                       <td className='text-right' id={`cart${index}`}>
-                        {cartItem.book.price} VND
+                        {unitCurrency.format(cartItem.book.price)} VND
                       </td>
                       <td
                         className='text-center'
                         style={{ paddingLeft: '3.75rem' }}
                       >
-                        <button className='btn btn-sm btn-danger'>
+                        <button
+                          className='btn btn-sm btn-danger'
+                          onClick={() => {
+                            axios
+                              .delete(
+                                `http://localhost:8082/api/v1/cart/${ownerCartId}/deleteItem/${cartItem.id}`,
+                                {
+                                  headers: {
+                                    Authorization: `Bearer ${localStorage.getItem(
+                                      'token'
+                                    )}`,
+                                  },
+                                }
+                              )
+                              .then((res) => {
+                                localStorage.removeItem(
+                                  `book ${cartItem.book.id}`
+                                );
+                                const tmpCart = cart.filter(
+                                  (item) => item.id !== cartItem.id
+                                );
+                                let tmpVal = 0;
+                                tmpCart.forEach((item, index) => {
+                                  tmpVal +=
+                                    item.book.price *
+                                    +document.querySelector(
+                                      `#quantityItem${index}`
+                                    ).value;
+                                });
+                                setTotalValueCart(tmpVal);
+                                setCart(tmpCart);
+                              })
+                              .catch(() => {
+                                alert('something went wrong');
+                              });
+                          }}
+                        >
                           <i className='fa fa-trash'></i>{' '}
                         </button>{' '}
                       </td>
                     </tr>
                   ))}
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Sub-Total</td>
-                    <td className='text-right'>255,90 €</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Shipping</td>
-                    <td className='text-right'>20000VND</td>
-                  </tr>
+
                   <tr>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td>
-                      <strong>Total</strong>
+                      <strong>Total Order Value:</strong>
                     </td>
                     <td className='text-right'>
-                      <strong>346,90 €</strong>
+                      <strong id='totalValue'>
+                        {unitCurrency.format(totalValueCart)} VND
+                      </strong>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div className='col mb-2'>
-            <div className='row'>
-              <div className='col-sm-12 col-md-6'>
-                <Link to='/' className='btn btn-block btn-outline-info'>
-                  Continue Shopping
-                </Link>
+
+          <div className='container d-flex align-items-center justify-content-center'>
+            <form
+              className='w-75 p-2 mb-5'
+              style={{
+                boxShadow: '0.5px 0.5px 2px 1px',
+                backgroundColor: '#F5F5F5',
+                borderRadius: '0.625rem',
+              }}
+              onSubmit={handleSubmit(submitOrder)}
+            >
+              <h3 className='text-center'>Receiver's Information</h3>
+              <div className='form-group'>
+                <label htmlFor='fullName'>Full Name</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='fullName'
+                  {...register('fullNameUserOrder', {
+                    required: 'Please provide your full name',
+                  })}
+                />
+                <small style={{ color: 'red' }}>
+                  {errors.fullNameUserOrder?.message}
+                </small>
               </div>
-              <div className='col-sm-12 col-md-6 text-right'>
-                <button className='btn btn-block btn-outline-success text-uppercase'>
-                  Check out
-                </button>
+
+              <div className='form-group'>
+                <label htmlFor='address'>Home Address</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='address'
+                  {...register('address', {
+                    required: 'Please provide your address',
+                  })}
+                />
+                <small style={{ color: 'red' }}>
+                  {errors.address?.message}
+                </small>
               </div>
-            </div>
+
+              <div className='form-group'>
+                <label htmlFor='phoneNumber'>Phone Number</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  id='phoneNumber'
+                  {...register('phoneNumber', {
+                    required: 'Please provide your phone number',
+                    pattern: {
+                      value: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
+                      message: 'Invalid phone number',
+                    },
+                  })}
+                />
+                <small style={{ color: 'red' }}>
+                  {errors.phoneNumber?.message}
+                </small>
+              </div>
+
+              <div className='col mb-2'>
+                <div className='row'>
+                  <div className='col-sm-12 col-md-6'>
+                    <Link to='/' className='btn btn-block btn-outline-info'>
+                      Continue Shopping
+                    </Link>
+                  </div>
+                  <div className='col-sm-12 col-md-6 text-right'>
+                    <button
+                      className='btn btn-block btn-outline-success text-uppercase'
+                      disabled={cart.length === 0 ? true : false}
+                      type='submit'
+                    >
+                      Check out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>

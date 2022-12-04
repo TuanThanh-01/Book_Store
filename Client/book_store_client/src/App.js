@@ -23,6 +23,7 @@ function App() {
           <Route path='/updateBook/:bookId' element={<UpdateBook />} />
           <Route path='/viewBook/:bookId' element={<BookDetails />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/historyOrder' element={<div>historyOrder</div>} />
         </Route>
         <Route path='*' element={<Forbidden />} />
       </Routes>

@@ -20,6 +20,7 @@ const BookDetails = () => {
   const [hover, setHover] = useState(0);
   const [ratingsPerPage] = useState(3);
   const navigate = useNavigate();
+  const unitCurrency = Intl.NumberFormat('en-US');
 
   const getBookData = async () => {
     try {
@@ -191,7 +192,7 @@ const BookDetails = () => {
                 </div>
                 <p className='product-description'>{book.description}</p>
                 <h5 className='price'>
-                  price: <span>{book.price} VND</span>
+                  price: <span>{unitCurrency.format(book.price)} VND</span>
                 </h5>
                 <div className='font-weight-bold'>
                   <p>
