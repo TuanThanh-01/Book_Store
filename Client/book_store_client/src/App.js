@@ -8,6 +8,7 @@ import Admin from './components/Admin/index';
 import NewBook from './components/Admin/components/NewBook/index';
 import UpdateBook from './components/Admin/components/UpdateBook/index';
 import BookDetails from './components/BookDetails/index';
+import HistoryOrder from './components/HistoryOrder/index';
 import Cart from './components/Cart/index';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
           <Route path='/updateBook/:bookId' element={<UpdateBook />} />
           <Route path='/viewBook/:bookId' element={<BookDetails />} />
           <Route path='/cart' element={<Cart />} />
-          <Route path='/historyOrder' element={<div>historyOrder</div>} />
+          <Route path='/historyOrder' element={<HistoryOrder />} />
         </Route>
         <Route path='*' element={<Forbidden />} />
       </Routes>

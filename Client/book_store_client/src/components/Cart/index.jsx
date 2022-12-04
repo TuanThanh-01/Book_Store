@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { SpinnerLoading } from '../SpinnerLoading';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 const Cart = () => {
@@ -11,6 +11,8 @@ const Cart = () => {
   const unitCurrency = Intl.NumberFormat('en-US');
   const [totalValueCart, setTotalValueCart] = useState(0);
   const [ownerCartId, setOwnerCartId] = useState(0);
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -28,6 +30,7 @@ const Cart = () => {
           },
         }
       );
+      setUser(response.data.user);
       setOwnerCartId(response.data.user.id);
       setCart(response.data.listCartItem);
       let tmpValue = 0;
@@ -41,7 +44,59 @@ const Cart = () => {
   };
 
   const submitOrder = (values) => {
-    console.log(values);
+    const listOrder = [];
+    cart.forEach((item, index) => {
+      const orderItem = {
+        book: item.book,
+        quantity: document.querySelector(`#quantityItem${index}`).value,
+        status: 'pending',
+      };
+      listOrder.push(orderItem);
+    });
+    const data = {
+      address: values.address,
+      phoneNumber: values.phoneNumber,
+      fullNameUserOrder: values.fullNameUserOrder,
+      dateOrder: new Date()
+        .toISOString()
+        .substring(0, 10)
+        .split('-')
+        .reverse()
+        .join('/'),
+      user: user,
+      listOderItem: listOrder,
+    };
+    console.log(data);
+    axios
+      .post(`http://localhost:8082/api/v1/order/create`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then(() => {
+        axios
+          .delete(
+            `http://localhost:8082/api/v1/cart/${ownerCartId}/deleteAllItem`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+            }
+          )
+          .then(() => {
+            cart.forEach((item) => {
+              localStorage.removeItem(`book ${item.book.id}`);
+            });
+            alert('Order success!!!');
+            navigate('/historyOrder');
+          })
+          .catch(() => {
+            alert('wrong wrong worng!');
+          });
+      })
+      .catch(() => {
+        alert('Place order false, try again!!!');
+      });
   };
 
   useEffect(() => {
