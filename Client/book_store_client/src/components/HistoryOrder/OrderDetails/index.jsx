@@ -165,6 +165,17 @@ const OrderDetails = ({ orderItem }) => {
           </div>
           <div>
             <h5 style={{ textTransform: 'capitalize' }}>
+              Total invoice:{' '}
+              <span style={{ color: '#1D1CE5' }}>
+                {unitCurrency.format(
+                  orderItem.listOderItem
+                    .map((order) => order.quantity * order.book.price)
+                    .reduce((acc, current) => acc + current)
+                )}{' '}
+                VND
+              </span>
+            </h5>
+            <h5 style={{ textTransform: 'capitalize' }}>
               Status Order:{' '}
               {orderStatus === 'pending' ? (
                 <span className='font-italic' style={{ color: '#FFBF00' }}>
