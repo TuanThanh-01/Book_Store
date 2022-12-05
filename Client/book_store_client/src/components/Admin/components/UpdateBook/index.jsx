@@ -123,27 +123,40 @@ const UpdateBook = () => {
                 data-ride='carousel'
               >
                 <h3 className='text-center mb-3'>Book Images</h3>
-                <div className='carousel-inner'>
-                  {book.bookImages.map((image, index) =>
-                    index === 1 ? (
-                      <div className='carousel-item active'>
-                        <img
-                          className='d-block w-100'
-                          src={`http://localhost:8082/images/${image.name}`}
-                          alt='First slide'
-                        />
-                      </div>
-                    ) : (
-                      <div className='carousel-item'>
-                        <img
-                          className='d-block w-100'
-                          src={`http://localhost:8082/images/${image.name}`}
-                          alt='First slide'
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
+                {book.bookImages.length === 1 ? (
+                  <div>
+                    <img
+                      className='d-block w-100'
+                      src={`http://localhost:8082/images/${book.bookImages[0].name}`}
+                      height='560px'
+                      alt='First slide'
+                    />
+                  </div>
+                ) : (
+                  <div className='carousel-inner'>
+                    {book.bookImages.map((image, index) =>
+                      index === 1 ? (
+                        <div className='carousel-item active'>
+                          <img
+                            className='d-block w-100'
+                            src={`http://localhost:8082/images/${image.name}`}
+                            height='560px'
+                            alt='First slide'
+                          />
+                        </div>
+                      ) : (
+                        <div className='carousel-item'>
+                          <img
+                            className='d-block w-100'
+                            src={`http://localhost:8082/images/${image.name}`}
+                            alt='First slide'
+                            height='560px'
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
+                )}
                 <a
                   className='carousel-control-prev'
                   href='#carouselExampleControls'
