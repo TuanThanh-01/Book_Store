@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 const Forbidden = () => {
   return (
     <article>
-      <div class='d-flex align-items-center justify-content-center'>
-        <div class='text-center mt-5'>
-          <h1 class='display-1 fw-bold'>404</h1>
-          <p class='fs-3'>
+      <div className='d-flex align-items-center justify-content-center'>
+        <div className='text-center mt-5'>
+          <h1 className='display-1 fw-bold'>404</h1>
+          <p className='fs-3'>
             {' '}
-            <span class='text-danger'>Opps!</span> Page not found.
+            <span className='text-danger'>Opps!</span> Page not found.
           </p>
-          <p class='lead'>The page you’re looking for doesn’t exist.</p>
-          <Link to='/' class='btn btn-primary'>
+          <p className='lead'>The page you’re looking for doesn’t exist.</p>
+          <Link to='/' className='btn btn-primary'>
             Go Home
           </Link>
         </div>

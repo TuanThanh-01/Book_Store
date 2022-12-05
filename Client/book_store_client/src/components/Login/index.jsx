@@ -35,6 +35,22 @@ const Login = () => {
         `${response.data.firstName} ${response.data.lastName}`
       );
       localStorage.setItem('token', response.data.token);
+      if (response.data.roles[0] !== 'ROLE_ADMIN') {
+        axios
+          .get(`http://localhost:8082/api/v1/cart/${response.data.id}`, {
+            headers: {
+              Authorization: `Bearer ${response.data.token}`,
+            },
+          })
+          .then((res) => {
+            res.data.listCartItem.forEach((item) =>
+              localStorage.setItem(`book ${item.book.id}`, 'added')
+            );
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
       reset();
       navigate('/');
     } catch (error) {

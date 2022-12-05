@@ -10,6 +10,7 @@ import UpdateBook from './components/Admin/components/UpdateBook/index';
 import BookDetails from './components/BookDetails/index';
 import HistoryOrder from './components/HistoryOrder/index';
 import Cart from './components/Cart/index';
+import ManageOrder from './components/ManageOrder/index';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/viewBook/:bookId' element={<BookDetails />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/historyOrder' element={<HistoryOrder />} />
+          <Route path='/manageOrder' element={<ManageOrder />} />
         </Route>
         <Route path='*' element={<Forbidden />} />
       </Routes>

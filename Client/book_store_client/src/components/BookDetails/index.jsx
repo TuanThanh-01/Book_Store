@@ -341,7 +341,7 @@ const BookDetails = () => {
           </p>
           <h3>Review</h3>
           <form>
-            <small class='form-text text-muted mb-2 font-italic font-weight-bold'>
+            <small className='form-text text-muted mb-2 font-italic font-weight-bold'>
               Reviews in here, maximum 100 characters
             </small>
             <textarea
@@ -376,7 +376,7 @@ const BookDetails = () => {
             </div>
             <button
               type='submit'
-              class='btn btn-outline-info d-block'
+              className='btn btn-outline-info d-block'
               onClick={handleSubmitReview}
             >
               Submit

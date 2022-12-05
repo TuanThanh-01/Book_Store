@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
 
-const OrderDetails = ({ orderItem }) => {
+const OrderDetailsUser = ({ orderItem }) => {
   const unitCurrency = Intl.NumberFormat('en-US');
 
   let [orderStatus, setOrderStatus] = useState(
@@ -25,9 +25,33 @@ const OrderDetails = ({ orderItem }) => {
       });
   };
 
+  const handleConfirmOrder = () => {
+    axios
+      .get(`http://localhost:8082/api/v1/order/confirm/${orderItem.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then(() => {
+        alert('Confirm order success');
+        setOrderStatus('Confirm');
+      })
+      .catch(() => {
+        alert('False to confirm order');
+      });
+  };
+
   return (
     <div className='row p-4 mb-5' style={{ boxShadow: '0.5px 0.5px 2px 1px' }}>
-      <p className='mb-3 font-weight-bold'>Date order: {orderItem.dateOrder}</p>
+      <div className='col-6 mb-3'>
+        <p className='font-weight-bold'>Date order: {orderItem.dateOrder}</p>
+      </div>
+      <div className='col-6'>
+        <p className='font-weight-bold text-right'>
+          User Email: {orderItem.user.email}
+        </p>
+      </div>
+
       {orderItem.listOderItem.map((order, index) => (
         <div className='container'>
           <div className='row mb-2'>
@@ -181,13 +205,23 @@ const OrderDetails = ({ orderItem }) => {
               )}
             </h5>
             {orderStatus === 'pending' ? (
-              <button
-                type='button'
-                className='btn btn-outline-danger mt-2'
-                onClick={handleCancelOrder}
-              >
-                Cancel Order
-              </button>
+              <div>
+                <button
+                  type='button'
+                  className='btn btn-outline-success mt-2 mr-2'
+                  onClick={handleConfirmOrder}
+                >
+                  Confirm Order
+                </button>
+
+                <button
+                  type='button'
+                  className='btn btn-outline-danger mt-2'
+                  onClick={handleCancelOrder}
+                >
+                  Cancel Order
+                </button>
+              </div>
             ) : (
               ''
             )}
@@ -198,4 +232,4 @@ const OrderDetails = ({ orderItem }) => {
   );
 };
 
-export default OrderDetails;
+export default OrderDetailsUser;

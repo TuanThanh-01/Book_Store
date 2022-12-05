@@ -17,7 +17,6 @@ const Cart = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   const getCartData = async () => {
@@ -66,7 +65,6 @@ const Cart = () => {
       user: user,
       listOderItem: listOrder,
     };
-    console.log(data);
     axios
       .post(`http://localhost:8082/api/v1/order/create`, data, {
         headers: {

@@ -10,15 +10,11 @@ const Header = () => {
 
   const handleLogout = () => {
     setIsLoading(true);
-    localStorage.clear('userId');
-    localStorage.clear('role');
-    localStorage.clear('token');
-    localStorage.clear('userName');
-    localStorage.clear('userEmail');
+    localStorage.clear();
     setTimeout(() => {
       setIsLoading(false);
       navigate('/');
-    }, 2000);
+    }, 1500);
   };
 
   if (isLoading) {
@@ -108,6 +104,13 @@ const Header = () => {
                 </Link>
               )}
             </li>
+            {localStorage.getItem('role') === 'ROLE_ADMIN' && (
+              <li className='nav-item'>
+                <Link className='nav-link' to='manageOrder'>
+                  Manage Order
+                </Link>
+              </li>
+            )}
             <li className='nav-item'>
               <Link className='nav-link' to='/' onClick={handleLogout}>
                 Log out
