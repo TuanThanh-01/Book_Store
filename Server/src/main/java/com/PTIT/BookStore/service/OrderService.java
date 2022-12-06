@@ -10,6 +10,8 @@ public interface OrderService {
 
     List<Order> getAllOrder(int userId);
 
+    List<Order> gettAllOrderAdmin();
+
     void cancelOrder(int orderId);
 
     void confirmOrder(int orderId);

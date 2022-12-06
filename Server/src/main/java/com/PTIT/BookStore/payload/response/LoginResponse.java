@@ -11,7 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class LoginResponse {
 
+    private int id;
     private String token;
+
     private String type = "Bearer";
     private String firstName;
     private String lastName;
@@ -19,7 +21,8 @@ public class LoginResponse {
 
     private List<String> roles;
 
-    public LoginResponse(String token, String email, String firstName, String lastName, List<String> roles) {
+    public LoginResponse(int id, String token, String email, String firstName, String lastName, List<String> roles) {
+        this.id = id;
         this.token = token;
         this.email = email;
         this.firstName = firstName;

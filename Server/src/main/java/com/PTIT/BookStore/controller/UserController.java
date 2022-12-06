@@ -2,6 +2,7 @@ package com.PTIT.BookStore.controller;
 
 import com.PTIT.BookStore.entities.Role;
 import com.PTIT.BookStore.entities.User;
+import com.PTIT.BookStore.exception.UserNotFoundException;
 import com.PTIT.BookStore.payload.request.LoginRequest;
 import com.PTIT.BookStore.payload.request.SignupRequest;
 import com.PTIT.BookStore.payload.response.LoginResponse;
@@ -9,6 +10,7 @@ import com.PTIT.BookStore.payload.response.MessageResponse;
 import com.PTIT.BookStore.repository.RoleRepository;
 import com.PTIT.BookStore.security.jwt.JwtUtils;
 import com.PTIT.BookStore.security.services.CustomUserDetails;
+import com.PTIT.BookStore.service.CartService;
 import com.PTIT.BookStore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +31,22 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private CartService cartService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -57,13 +62,13 @@ public class UserController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new LoginResponse(jwt, userDetails.getUsername(),
+        return ResponseEntity.ok(new LoginResponse(userDetails.getId(), jwt, userDetails.getUsername(),
                 userDetails.getFirstName(), userDetails.getLastName(), roles));
 
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) throws UserNotFoundException {
         if(userService.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -85,7 +90,8 @@ public class UserController {
             user.getRoles().add(roleUser);
         }
 
-        userService.saveUser(user);
+        User tmpUser = userService.saveUser(user);
+        cartService.createCart(tmpUser.getId());
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

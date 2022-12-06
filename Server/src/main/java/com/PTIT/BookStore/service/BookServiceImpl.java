@@ -99,50 +99,19 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Map<String, Object> fetchAllBook(String title, int page, int size) {
-        List<Book> books = new ArrayList<>();
-        Pageable paging = PageRequest.of(page, size);
-
-        Page<Book> pageBooks;
-        if(title == null) {
-            pageBooks = bookRepository.findAll(paging);
+    public List<Book> fetchAllBook(String title) {
+        if(title != null) {
+            return bookRepository.findByTitleContaining(title);
         }
-        else {
-            pageBooks = bookRepository.findByTitleContaining(title, paging);
-        }
-
-        books = pageBooks.getContent();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("books", books);
-        response.put("currentPage", pageBooks.getNumber());
-        response.put("totalItems", pageBooks.getTotalElements());
-        response.put("totalPages", pageBooks.getTotalPages());
-
-        return response;
+        return bookRepository.findAll();
     }
 
     @Override
-    public Map<String, Object> fetchAllBookByTypeBook(String typeBook, int page, int size) {
-        List<Book> books = new ArrayList<>();
-        Pageable paging = PageRequest.of(page, size);
-        Page<Book> pageBooks;
-        if(typeBook == null){
-            pageBooks = bookRepository.findAll(paging);
+    public List<Book> fetchAllBookByTypeBook(String typeBook) {
+        if(typeBook != null) {
+            return bookRepository.findByTypeBook(typeBook);
         }
-        else{
-            pageBooks = bookRepository.findByTypeBook(typeBook, paging);
-        }
-
-        books = pageBooks.getContent();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("books", books);
-        response.put("currentPage", pageBooks.getNumber());
-        response.put("totalItems", pageBooks.getTotalElements());
-        response.put("totalPages", pageBooks.getTotalPages());
-
-        return response;
+        return bookRepository.findAll();
     }
 
     @Override
@@ -183,6 +152,10 @@ public class BookServiceImpl implements BookService{
 
         if(Objects.nonNull(book.getTypeBook()) && !"".equalsIgnoreCase(book.getTypeBook())) {
             bookDB.setTypeBook(book.getTypeBook());
+        }
+
+        if(Objects.nonNull(book.getPrice()) && book.getTotalPage() > 0) {
+            bookDB.setPrice(book.getPrice());
         }
 
         if(Objects.nonNull(book.getBookImages()) && book.getBookImages().size() > 0) {

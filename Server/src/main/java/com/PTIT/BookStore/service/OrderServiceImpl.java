@@ -37,6 +37,11 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public List<Order> gettAllOrderAdmin() {
+        return orderRepository.findAll();
+    }
+
+    @Override
     public void cancelOrder(int orderId) {
         Order order = orderRepository.findById(orderId).get();
         for(OrderItem orderItem: order.getListOderItem()) {

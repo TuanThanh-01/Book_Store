@@ -19,7 +19,6 @@ public class OrderController {
 
     @PostMapping("/order/create")
     public ResponseEntity<?> createOrder(@RequestBody Order order) {
-
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order));
     }
 
@@ -28,15 +27,21 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getAllOrder(userId));
     }
 
-    @PostMapping("/order/cancel/{orderId}")
+    @GetMapping("/orders")
+    public ResponseEntity<?> getAllOrderAdmin() {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.gettAllOrderAdmin());
+    }
+
+    @GetMapping("/order/cancel/{orderId}")
     public ResponseEntity<?> cancelOrder(@PathVariable("orderId") int orderId) {
         orderService.cancelOrder(orderId);
         return ResponseEntity.status(HttpStatus.OK).body("Cancel order successfully!!!");
     }
 
-    @PostMapping("/order/confirm/{orderId}")
+    @GetMapping("/order/confirm/{orderId}")
     public ResponseEntity<?> confirmOrder(@PathVariable("orderId") int orderId) {
         orderService.confirmOrder(orderId);
         return ResponseEntity.status(HttpStatus.OK).body("Confirm order successfully!!!");
     }
+
 }

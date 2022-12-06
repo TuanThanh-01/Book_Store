@@ -10,7 +10,7 @@ public interface UserService {
 
     boolean existsByEmail(String email);
 
-    void saveUser(User user);
+    User saveUser(User user);
 
     List<User> findAllUser();
 }

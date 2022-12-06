@@ -19,11 +19,6 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/cart/{userId}/create")
-    public ResponseEntity<?> createCart(@PathVariable("userId") int userId) throws UserNotFoundException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.createCart(userId));
-    }
-
     @GetMapping("/cart/{userId}")
     public ResponseEntity<?> getCartByUserId(@PathVariable("userId") int userId) {
         return ResponseEntity.status(HttpStatus.OK).body(cartService.getCartByUser(userId));

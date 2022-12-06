@@ -17,9 +17,9 @@ public interface BookService {
 
     void deleteImage(String title) throws IOException;
 
-    Map<String, Object> fetchAllBook(String title, int page, int size);
+    List<Book> fetchAllBook(String title);
 
-    Map<String, Object> fetchAllBookByTypeBook(String typeBook, int page, int size);
+    List<Book> fetchAllBookByTypeBook(String typeBook);
 
     Book fetchBookById(int id) throws BookNotFoundException;
 

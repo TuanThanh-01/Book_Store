@@ -5,6 +5,7 @@ import com.PTIT.BookStore.entities.Image;
 import com.PTIT.BookStore.exception.BookNotFoundException;
 import com.PTIT.BookStore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,12 +26,10 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/books")
-    public ResponseEntity<Map<String, Object>> fetchAllBook(@RequestParam(required = false) String title,
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "5") int size){
-        Map<String, Object> response = bookService.fetchAllBook(title, page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<?> fetchAllBook(@Param("title") String title){
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.fetchAllBook(title));
     }
+
 
     @GetMapping("/book/{id}")
     public ResponseEntity<?> fetchBookById(@PathVariable("id") int bookId) throws BookNotFoundException {
@@ -61,9 +60,6 @@ public class BookController {
                            @RequestParam String totalPage, @RequestParam String typeBook,
                            @RequestParam int price, @RequestBody MultipartFile[] images) throws BookNotFoundException, IOException{
         title = title.toLowerCase();
-        if(!bookService.isTitleUnique(title)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Duplicated Title");
-        }
         Book bookDb = bookService.fetchBookById(bookId);
         List<Image> imageList = bookService.updateImage(title, bookDb.getTitle(), images);
         int totalPageNum = Integer.parseInt(totalPage);

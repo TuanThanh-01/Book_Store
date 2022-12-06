@@ -55,8 +55,10 @@ public class SecurityConfiguration {
                 .and().authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers("/api/v1/books").permitAll()
+                .antMatchers("/api/v1/book/**").permitAll()
                 .antMatchers("/api/v1/admin/book/**").hasRole("ADMIN")
                 .antMatchers("/api/v1/order/confirm/**").hasRole("ADMIN")
+                .antMatchers("/api/v1/orders").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
